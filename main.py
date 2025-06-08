@@ -11,6 +11,8 @@ from subprocess import getstatusoutput
 
 import requests
 from pyrogram import Client, filters
+from threading import Thread
+from flask import Flask
 from pyrogram.errors import FloodWait
 from pyrogram.types import Message
 from pyromod import listen
@@ -2428,4 +2430,17 @@ async def account_login(bot: Client, m: Message):
         f.write(cool2)
     await m.reply_document(f"{file_name}.txt")
 
-bot.run()
+# Flask Dummy Server
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is alive!"
+
+def run_flask():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+
+# Run both
+if __name__ == "__main__":
+    Thread(target=run_flask).start()
+    bot.run()
