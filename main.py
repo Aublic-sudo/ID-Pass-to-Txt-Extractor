@@ -1283,7 +1283,7 @@ async def accounpwlwogin(bot: Client, m: Message):
 async def khazanan(bot: Client, m: Message):
     if not one(m.from_user.id):
         return await m.reply_text(
-            "✨ Hello I Am TXT File Downloader And Extractor Bot.\n\n👉🏻 Press /pyro To Download Links Listed. Send TXT File FORMAT {FileName : FileLink}\n👉🏻 Press /cancel To Cancel All Running Task\n👉🏻 Press /restart To Restart The Bot.\n👉🏻 Press /pw To Extract All Downloadable Links Using AUTH CODE \n\n🫶🏻 Bot Made By LegendBoy"
+            "✨ Hello I Am TXT File Downloader And Extractor Bot.\n\n👉🏻 Press /pyro To Download Links Listed. Send TXT File FORMAT {FileName : FileLink}\n👉🏻 Press /cancel To Cancel All Running Task\n👉🏻 Press /restart To Restart The Bot.\n👉🏻 Press /pw To Extract All Downloadable Links Using AUTH CODE \n\n🫶🏻 Bot Made By AublicXRobot"
         )
 
     editable = await m.reply_text(
@@ -1636,7 +1636,7 @@ async def khann(bot: Client, m: Message):
 async def account_ln(bot: Client, m: Message):
     user = m.from_user.id if m.from_user is not None else None
     if user is not None and user not in sudo_users:
-        await m.reply("**Buy it from @LegendBoy_OP**", quote=True)
+        await m.reply("**Buy it from @AublicXRobot_OP**", quote=True)
         return
     else:
         editable = await m.reply_text(
