@@ -2,7 +2,7 @@ import os
 
 api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
-bot_token = os.getenv("7091128043:AAF6_dq4UK7yoBOTKSWrAG05OBdO7Syt4j0")
+bot_token = os.getenv("BOT_TOKEN")
 
 auth_users = os.getenv("AUTH_USERS", "7360968885")  # comma-separated string
 sudo_users = [int(num) for num in auth_users.split(",") if num.strip().isdigit()]
