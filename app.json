@@ -7,8 +7,8 @@
         "video-extract",
         "pyrogram"
     ],
-    "repository": "https://github.com/XdityaHalder/SankiMusic",
-    "success_url": "https://t.me/AdityaDiscus",
+   
+    "success_url": "https://t.me/Aublic",
     "stack": "container",
     "env": {
         "API_ID": {
@@ -36,9 +36,7 @@
     "buildpacks": [
         {
             "url": "heroku/python"
-        },
-        {
-            "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
         }
+     
     ]
     }
