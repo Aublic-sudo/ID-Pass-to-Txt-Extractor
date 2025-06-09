@@ -11,6 +11,7 @@ from subprocess import getstatusoutput
 
 import requests
 from pyrogram import Client, filters
+from pyrogram.types import CallbackQuery
 from threading import Thread
 from flask import Flask
 from pyrogram.errors import FloodWait
