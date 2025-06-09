@@ -22,7 +22,7 @@ import online.helpers.vid as helper
 from online.Config import *
 from online.helpers.button import keyboard
 from online.helpers.sudoers import *
-from online.helpers.text import *
+from online.helpers.text import help_text
 
 # ==========Logging==========#
 logging.basicConfig(
@@ -171,6 +171,11 @@ async def account_lstarn(bot: Client, m: Message):
         caption=caption,
         reply_markup=keyboard
     )
+
+
+@bot.on_message(filters.command("help"))
+async def show_help(client, message):
+    await message.reply_text(help_text)
 
 
 # ========== Global Concel Command ============
