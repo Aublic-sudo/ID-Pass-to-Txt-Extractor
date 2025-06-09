@@ -9,11 +9,7 @@ keyboard = InlineKeyboardMarkup([
         InlineKeyboardButton("Khazana", callback_data="Khazana"),
         InlineKeyboardButton("Apni", callback_data="Apni")
     ],
-    [
-        InlineKeyboardButton("khangs", callback_data="khangs"),
-        InlineKeyboardButton("cp", callback_data="cp"),
-        InlineKeyboardButton("exampur", callback_data="exampur")
-    ],
+   
     [
         InlineKeyboardButton("patna", callback_data="patna"),
         InlineKeyboardButton("infopw", callback_data="infopw"),
@@ -39,7 +35,8 @@ keyboard = InlineKeyboardMarkup([
         InlineKeyboardButton("taiyaric", callback_data="taiyaric")
     ],
     [
+      
+        InlineKeyboardButton("cp", callback_data="cp"),
         InlineKeyboardButton("shell", callback_data="shell"),
-        InlineKeyboardButton("eval", callback_data="eval")
-    ]
+    ],
 ])
