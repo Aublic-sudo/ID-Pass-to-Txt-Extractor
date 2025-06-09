@@ -2290,10 +2290,9 @@ async def account_login(bot: Client, m: Message):
             except Exception as e:
                 await m.reply_text(str(e))
 
-            dur = int(helper.duration(filename))
+                dur = int(helper.duration(filename))
 
-            start_time = time.time()
-
+                start_time = time.time()
                 await m.reply_video(
                     f"{name}.mp4",
                     supports_streaming=True,
@@ -2305,6 +2304,7 @@ async def account_login(bot: Client, m: Message):
                     progress=progress_bar,
                     progress_args=(reply, start_time)
                 )
+
 
                 count+=1
                 os.remove(f"{name}.mp4")
