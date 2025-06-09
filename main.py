@@ -56,7 +56,7 @@ callback_command_map = {
     "PW": accounpwlwogin,
     "Khazana": khazanan,
     "Apni": apnissn,
-    "khangs": khann,
+    "khan": khann,
     "cp": infcpsgin,
     "patna": khan_dowbol,
     "infopw": info_login,
@@ -72,8 +72,6 @@ callback_command_map = {
     "Cancel": cancel,
     "Restart": restart_handler,
     "shell": shell,
-     # Agar aapka eval ka function hai to yahan uska naam likh do
-    # "exampur": exampur_handler,  # Agar exampur ka function hai to yahan add karo
 }
 
 @bot.on_callback_query()
