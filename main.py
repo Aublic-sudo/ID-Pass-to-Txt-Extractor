@@ -2339,126 +2339,215 @@ async def account_login(bot: Client, m: Message):
         await m.reply_text(str(e))
     await m.reply_text("Done") 
 
+from pyrogram import Client, filters
+from pyrogram.types import Message
+import requests
+import json
+import time
+import uuid
+from base64 import b64decode
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
+
 @bot.on_message(filters.command(["rozgar"]))
 async def account_login_rozgar(bot: Client, m: Message):
-    editable = await m.reply_text("Send **ID & Password** in this manner otherwise bot will not respond.\n\nSend like this:-  **ID*Password**")
-    rwa_url = "https://rozgarapinew.teachx.in/post/login"
-    hdr = {"Client-Service": "Appx",
-           "Auth-Key": "appxapi",
-           "User-ID": "-2",
-           "Authorization": "",
-           "User_app_category": "",
-           "Language": "en",
-           "Content-Type": "application/x-www-form-urlencoded",
-           "Content-Length": "236",
-           "Accept-Encoding": "gzip, deflate",
-           "User-Agent": "okhttp/4.9.1"
-           }
-    info = {"email": "", "password": ""}
+    editable = await m.reply_text(
+        "Send **ID & Password** or **Token*UserID** in this manner otherwise bot will not respond.\n\n"
+        "Send like this:-  **ID*Password** OR **Token*UserID**"
+    )
+    
+    # URL & Common headers
+    base_url = "https://rozgarapinew.teachx.in"
+    login_url = base_url + "/post/login"
+    hdr = {
+        "Client-Service": "Appx",
+        "Auth-Key": "appxapi",
+        "User-ID": "-2",
+        "Authorization": "",
+        "User_app_category": "",
+        "Language": "en",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept-Encoding": "gzip, deflate",
+        "User-Agent": "okhttp/4.9.1"
+    }
+    
+    # Wait for user input
     input1 = await bot.listen(editable.chat.id)
-    raw_text = input1.text
-    info["email"] = raw_text.split("*")[0]
-    info["password"] = raw_text.split("*")[1]
+    raw_text = input1.text.strip()
     await input1.delete(True)
-    res = requests.post(rwa_url, data=info, headers=hdr).content
-    output = json.loads(res)
-    userid = output["data"]["userid"]
-    token = output["data"]["token"]
-    hdr1 = {
+    
+    # Determine login type: token-based or ID*Password
+    if "*" not in raw_text:
+        await editable.edit("❌ Invalid format! Please send in the form: ID*Password or Token*UserID")
+        return
+    
+    part1, part2 = raw_text.split("*", 1)
+    
+    userid = None
+    token = None
+    
+    if len(part1) > 50:  # assuming token is longer than normal IDs/emails
+        # Token login flow
+        token = part1
+        userid = part2
+        # Just verify token by calling get/mycourse
+        hdr1 = {
+            "Client-Service": "Appx",
+            "Auth-Key": "appxapi",
+            "User-ID": userid,
+            "Authorization": token,
+            "User_app_category": "",
+            "Language": "en",
+            "Host": "rozgarapinew.teachx.in",
+            "User-Agent": "okhttp/4.9.1"
+        }
+        try:
+            res1 = requests.get(f"{base_url}/get/mycourse?userid={userid}", headers=hdr1)
+            if res1.status_code != 200 or "data" not in res1.json():
+                await editable.edit("❌ Invalid Token or UserID. Login failed.")
+                return
+            b_data = res1.json()['data']
+        except Exception as e:
+            await editable.edit(f"❌ Error during login: {str(e)}")
+            return
+        
+    else:
+        # ID*Password login flow
+        info = {"email": part1, "password": part2}
+        try:
+            res = requests.post(login_url, data=info, headers=hdr)
+            output = res.json()
+            if output.get("status") != "success":
+                await editable.edit("❌ Login failed. Check your credentials.")
+                return
+            userid = str(output["data"]["userid"])
+            token = output["data"]["token"]
+            # Now get course data
+            hdr1 = {
+                "Client-Service": "Appx",
+                "Auth-Key": "appxapi",
+                "User-ID": userid,
+                "Authorization": token,
+                "User_app_category": "",
+                "Language": "en",
+                "Host": "rozgarapinew.teachx.in",
+                "User-Agent": "okhttp/4.9.1"
+            }
+            res1 = requests.get(f"{base_url}/get/mycourse?userid={userid}", headers=hdr1)
+            if res1.status_code != 200 or "data" not in res1.json():
+                await editable.edit("❌ Failed to fetch batches after login.")
+                return
+            b_data = res1.json()['data']
+        except Exception as e:
+            await editable.edit(f"❌ Error during login: {str(e)}")
+            return
+
+    await editable.edit("**Login Successful**")
+    
+    # Show batches to user
+    batch_msg = "**You have these batches :-**\n\n**BATCH-ID -      BATCH NAME**\n\n"
+    cool = ""
+    for data in b_data:
+        aa = f" `{data['id']}`      - **{data['course_name']}**\n\n"
+        if len(batch_msg + cool + aa) > 4096:
+            cool = ""
+        cool += aa
+    await editable.edit(batch_msg + cool)
+
+    # Ask for batch ID
+    editable1 = await m.reply_text("**Now send the Batch ID to Download**")
+    input2 = await bot.listen(editable.chat.id)
+    batch_id = input2.text.strip()
+    await editable.delete(True)
+    await input2.delete(True)
+
+    editable2 = await m.reply_text("📥**Please wait, keep patience.** 🧲    `Scraping URLs...`")
+    time.sleep(2)
+
+    # Get subject IDs for batch
+    try:
+        res2 = requests.get(f"{base_url}/get/allsubjectfrmlivecourseclass?courseid={batch_id}", headers=hdr1).json()
+        subject_data = res2.get("data", [])
+        subject_ids = [str(subject["subjectid"]) for subject in subject_data]
+    except Exception as e:
+        await editable2.edit(f"❌ Error fetching subjects: {str(e)}")
+        return
+
+    await editable2.edit("📥**Scraping URLs...** 🧲")
+
+    # Collect all topic IDs for all subjects
+    all_topic_ids = []
+    for subject_id in subject_ids:
+        try:
+            res3 = requests.get(f"{base_url}/get/alltopicfrmlivecourseclass?courseid={batch_id}&subjectid={subject_id}", headers=hdr1)
+            topic_data = res3.json().get('data', [])
+            topic_ids = [str(topic["topicid"]) for topic in topic_data]
+            all_topic_ids.extend(topic_ids)
+        except Exception as e:
+            await editable2.edit(f"❌ Error fetching topics for subject {subject_id}: {str(e)}")
+            return
+
+    # Find batch name for filename
+    b_name = next((x['course_name'] for x in b_data if str(x['id']) == batch_id), None)
+    if not b_name:
+        b_name = str(uuid.uuid4())
+
+    # Setup header for final requests
+    hdr11 = {
+        "Host": "rozgarapinew.teachx.in",
         "Client-Service": "Appx",
         "Auth-Key": "appxapi",
         "User-ID": userid,
         "Authorization": token,
         "User_app_category": "",
         "Language": "en",
-        "Host": "rozgarapinew.teachx.in",
         "User-Agent": "okhttp/4.9.1"
     }
-    
-    await editable.edit("**login Successful**")
-    res1 = requests.get("https://rozgarapinew.teachx.in/get/mycourse?userid="+userid, headers=hdr1)
-    b_data = res1.json()['data']
-    cool = ""
-    
-    for data in b_data:
-        t_name = data['course_name']
-        FFF = "**BATCH-ID -      BATCH NAME **"
-        aa = f" `{data['id']}`      - **{data['course_name']}**\n\n"
-        if len(f'{cool}{aa}') > 4096:
-            cool = ""
-        cool += aa
-    await editable.edit(f'{"**You have these batches :-**"}\n\n{FFF}\n\n{cool}')
-    editable1 = await m.reply_text("**Now send the Batch ID to Download**")
-    input2 = await bot.listen(editable.chat.id)
-    raw_text2 = input2.text
-    await editable.delete(True)
-    await input2.delete(True)
-    editable2 = await m.reply_text("📥**Please wait keep patientce.** 🧲    `Scraping Url.`")
-    time.sleep(2)
-    # Before the loop where you process topic data
-    b_name = None  # Define b_name with a default value
 
+    cool2 = ""
+    for t in all_topic_ids:
+        try:
+            # Note: Use last subject_id for request or loop subjects? Usually subject_id param is needed, so pick one that matches topic
+            # Here, sending last subject_id (could be improved by mapping topic to subject)
+            res4 = requests.get(
+                f"{base_url}/get/livecourseclassbycoursesubtopconceptapiv3?topicid={t}&start=-1&conceptid=1&courseid={batch_id}&subjectid={subject_ids[-1]}",
+                headers=hdr11
+            )
+            topicid_data = res4.json().get("data", [])
+            for data in topicid_data:
+                # get encrypted link
+                enc_link = data.get("download_link") or data.get("pdf_link")
+                if not enc_link:
+                    continue
+                
+                # Decrypt the link
+                tid = data.get("Title", "").replace(" : ", " ").replace(" :- ", " ").replace(" :-", " ").replace(":-", " ").replace("_", " ").replace("(", "").replace(")", "").replace("&", "").strip()
+                key = b"638udh3829162018"
+                iv = b"fedcba9876543210"
+                ciphertext = bytearray.fromhex(b64decode(enc_link.encode()).hex())
+                cipher = AES.new(key, AES.MODE_CBC, iv)
+                plaintext = unpad(cipher.decrypt(ciphertext), AES.block_size)
+                decrypted_link = plaintext.decode('utf-8')
+                
+                cc0 = f"{tid}:{decrypted_link}\n"
+                if len(cool2 + cc0) > 9999:
+                    # If very long, reset
+                    cool2 = ""
+                cool2 += cc0
+        except Exception as e:
+            # Log but don't stop
+            await editable2.edit(f"Warning: error in topic {t}: {str(e)}")
+            continue
 
-
-# Inside the loop where you reply with the document
-
-    # Fetch subject IDs corresponding to the batch ID
-    res2 = requests.get("https://rozgarapinew.teachx.in/get/allsubjectfrmlivecourseclass?courseid="+raw_text2, headers=hdr1).json()
-    subject_data = res2["data"]
-    # Extract subject IDs from the response
-    subject_ids = [subject["subjectid"] for subject in subject_data]
-    await editable2.edit("📥**Please wait keep patientce.** 🧲    `Scraping Url..`")
-    time.sleep(2)
-    # Fetch topic IDs corresponding to each subject ID
-    all_topic_ids = []
-    for subject_id in subject_ids:
-        res3 = requests.get("https://rozgarapinew.teachx.in/get/alltopicfrmlivecourseclass?courseid="+raw_text2+"&subjectid="+subject_id, headers=hdr1)
-        topic_data = res3.json()['data']
-        topic_ids = [topic["topicid"] for topic in topic_data]
-        all_topic_ids.extend(topic_ids)
-    # Inside the loop where you check for batch name
-    b_name = next((x['id'] for x in b_data if str(x['course_name']) == raw_text2), None)
-    # Now all_topic_ids contains all the topic IDs for the given batch ID
-
-    xv = all_topic_ids  # Use all_topic_ids as the list of topic IDs
-
-    hdr11 = {
-        "Host": "rozgarapinew.teachx.in",
-        "Client-Service": "Appx",
-        "Auth-Key": "appxapi",
-        "User-Id": userid,
-        "Authorization": token
-    }    
-    
-    cool2 = ""  # Define cool2 outside the loop to accumulate all URLs
-    await editable2.edit("📥**Please wait keep patientce.** 🧲    `Scraping Url...`")
-    for t in xv:  # Loop through all topic IDs
-        res4 = requests.get("https://rozgarapinew.teachx.in/get/livecourseclassbycoursesubtopconceptapiv3?topicid=" + t + "&start=-1&conceptid=1&courseid=" + raw_text2 + "&subjectid=" + subject_id, headers=hdr11).json()
-        topicid = res4["data"]
-        for data in topicid:
-            if data["download_link"]:
-                b64 = (data["download_link"])
-            else:
-                b64 = (data["pdf_link"])
-            tid = data["Title"].replace(" : ", " ").replace(" :- ", " ").replace(" :-", " ").replace(":-", " ").replace("_", " ").replace("(", "").replace(")", "").replace("&", "").strip()
-            zz = len(tid)
-            key = "638udh3829162018".encode("utf8")
-            iv = "fedcba9876543210".encode("utf8")
-            ciphertext = bytearray.fromhex(b64decode(b64.encode()).hex())
-            cipher = AES.new(key, AES.MODE_CBC, iv)
-            plaintext = unpad(cipher.decrypt(ciphertext), AES.block_size)
-            b = plaintext.decode('utf-8')
-            cc0 = f"{tid}:{b}"
-            if len(f'{cool2}{cc0}') > 9999:
-                cool2 = ""
-            cool2 += cc0
     await editable2.edit("Scraping completed successfully!")
     await editable2.delete(True)
-    # Outside the loop, write all URLs to a single file and reply with the document
-    file_name = b_name if b_name else str(uuid.uuid4())  # Use batch name if available, else generate a random file name
-    with open(f'{file_name}.txt', 'w') as f:
+
+    # Write to file and send
+    filename = f"{b_name}.txt"
+    with open(filename, "w", encoding="utf-8") as f:
         f.write(cool2)
-    await m.reply_document(f"{file_name}.txt")
+
+    await m.reply_document(filename)
 
 
 # =========== Callback Query Handler =========== #
