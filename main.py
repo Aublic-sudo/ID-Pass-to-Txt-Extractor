@@ -46,6 +46,60 @@ bot = Client(
 
 print(listen.__file__)
 
+# =========== Callback Query Handler =========== #
+
+@bot.on_callback_query()
+async def handle_callback(bot, query: CallbackQuery):
+    data = query.data  # Jo button ka callback_data hai
+
+    if data == "PW":
+        await query.message.reply_text("✅ PW CMD Executed!")
+    elif data == "Khazana":
+        await query.message.reply_text("📦 Khazana CMD Executed!")
+    elif data == "Apni":
+        await query.message.reply_text("👤 Apni CMD Executed!")
+    elif data == "khangs":
+        await query.message.reply_text("🔥 khangs CMD Executed!")
+    elif data == "cp":
+        await query.message.reply_text("🔐 cp CMD Executed!")
+    elif data == "exampur":
+        await query.message.reply_text("📚 exampur CMD Executed!")
+    elif data == "patna":
+        await query.message.reply_text("🏙 patna CMD Executed!")
+    elif data == "infopw":
+        await query.message.reply_text("ℹ️ infopw CMD Executed!")
+    elif data == "khan":
+        await query.message.reply_text("👑 khan CMD Executed!")
+    elif data == "adownload":
+        await query.message.reply_text("⬇️ adownload CMD Executed!")
+    elif data == "pro_vision":
+        await query.message.reply_text("🧿 pro_vision CMD Executed!")
+    elif data == "adda_pdf":
+        await query.message.reply_text("📄 adda_pdf CMD Executed!")
+    elif data == "pro_olive":
+        await query.message.reply_text("🟢 pro_olive CMD Executed!")
+    elif data == "pro_jw":
+        await query.message.reply_text("🌀 pro_jw CMD Executed!")
+    elif data == "top":
+        await query.message.reply_text("🏆 top CMD Executed!")
+    elif data == "rozgar":
+        await query.message.reply_text("💼 rozgar CMD Executed!")
+    elif data == "Pyro":
+        await query.message.reply_text("🚀 Pyro CMD Executed!")
+    elif data == "Cancel":
+        await query.message.reply_text("❌ Cancel CMD Executed!")
+    elif data == "Restart":
+        await query.message.reply_text("🔄 Restart CMD Executed!")
+    elif data == "taiyaric":
+        await query.message.reply_text("🎯 taiyaric CMD Executed!")
+    elif data == "shell":
+        await query.message.reply_text("💻 shell CMD Executed!")
+    elif data == "eval":
+        await query.message.reply_text("📊 eval CMD Executed!")
+    else:
+        await query.message.reply_text("❓ Unknown Command!")
+
+
 
 # ========== Converter =============#
 @bot.on_message(filters.command(["taiyaric"]))
