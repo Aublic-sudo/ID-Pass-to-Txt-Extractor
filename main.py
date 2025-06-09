@@ -47,43 +47,6 @@ bot = Client(
 
 print(listen.__file__)
 
-# =========== Callback Query Handler =========== #
-
-# ...existing code...
-
-# Callback data to handler mapping
-callback_command_map = {
-    "PW": accounpwlwogin,
-    "Khazana": khazanan,
-    "Apni": apnissn,
-    "khan": khann,
-    "cp": infcpsgin,
-    "patna": khan_dowbol,
-    "infopw": info_login,
-    "adownload": account_ln,
-    "pro_vision": pro_visooin,
-    "adda_pdf": addaspsdin,
-    "pro_olive": proolsgin,
-    "pro_jw": projwin,
-    "top": account_login,
-    "rozgar": account_login_rozgar,
-    "taiyaric": gaiyrab,
-    "Pyro": download_pw,
-    "Cancel": cancel,
-    "Restart": restart_handler,
-    "shell": shell,
-}
-
-@bot.on_callback_query()
-async def handle_callback(bot, query: CallbackQuery):
-    data = query.data
-    handler = callback_command_map.get(data)
-    if handler:
-        await handler(bot, query.message)
-    else:
-        await query.message.reply_text("❓ Unknown Command!")
-# ...existing code...
-
 
 
 # ========== Converter =============#
@@ -2484,6 +2447,44 @@ async def account_login_rozgar(bot: Client, m: Message):
     with open(f'{file_name}.txt', 'w') as f:
         f.write(cool2)
     await m.reply_document(f"{file_name}.txt")
+
+
+# =========== Callback Query Handler =========== #
+
+# ...existing code...
+
+# Callback data to handler mapping
+callback_command_map = {
+    "PW": accounpwlwogin,
+    "Khazana": khazanan,
+    "Apni": apnissn,
+    "khan": khann,
+    "cp": infcpsgin,
+    "patna": khan_dowbol,
+    "infopw": info_login,
+    "adownload": account_ln,
+    "pro_vision": pro_visooin,
+    "adda_pdf": addaspsdin,
+    "pro_olive": proolsgin,
+    "pro_jw": projwin,
+    "top": account_login,
+    "rozgar": account_login_rozgar,
+    "taiyaric": gaiyrab,
+    "Pyro": download_pw,
+    "Cancel": cancel,
+    "Restart": restart_handler,
+    "shell": shell,
+}
+
+@bot.on_callback_query()
+async def handle_callback(bot, query: CallbackQuery):
+    data = query.data
+    handler = callback_command_map.get(data)
+    if handler:
+        await handler(bot, query.message)
+    else:
+        await query.message.reply_text("❓ Unknown Command!")
+# ...existing code...
 
 # Flask Dummy Server
 app = Flask(__name__)
