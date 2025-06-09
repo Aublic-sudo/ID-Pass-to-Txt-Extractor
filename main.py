@@ -160,10 +160,9 @@ Step 3: Send your Telegram ID From @missrose_bot
 @bot.on_message(filters.command(["start"]))
 async def account_lstarn(bot: Client, m: Message):
     caption = (
-        "👋 **Welcome to AUBLIC Extractor Bot!**\n\n"
-        "📁 I am a **TXT to Video Uploader** and **Link Downloader Bot**.\n"
-        "📦 Just use the buttons below or send valid commands to get started.\n\n"
-        "👇 Choose your option to begin:"
+    "👋 **Welcome to AUBLIC Extractor Bot!**\n\n"
+    "📁 I can help you **upload TXT files as videos**, **extract direct links**, and more.\n"
+    "ℹ️ Need help? Type /help to see all supported commands and features.\n\n"
     )
 
     await m.reply_photo(
