@@ -157,13 +157,19 @@ Step 3: Send your Telegram ID From @missrose_bot
 # ============== Start Commands ==========#
 @bot.on_message(filters.command(["start"]))
 async def account_lstarn(bot: Client, m: Message):
+    # If user not in whitelist
     if not one(m.from_user.id):
         return await m.reply_photo(
             photo="https://i.ibb.co/cSyLcHNz/Chat-GPT-Image-Jun-3-2025-03-16-31-PM.png",
-            caption=paid_text,
-            reply_markup=keyboard,
+            caption=start_text,
+            reply_markup=keyboard
         )
-    await m.reply_text(start_text)
+
+    # If user is allowed
+    await m.reply_photo(
+        photo="https://i.ibb.co/cSyLcHNz/Chat-GPT-Image-Jun-3-2025-03-16-31-PM.png",
+        caption=start_text,
+        reply_markup=keyboard
 
 
 # ========== Global Concel Command ============
